@@ -15,13 +15,16 @@ if [ ! -e $VECTOR_DATA ]; then
   if [ ! -e $TEXT_DATA ]; then
     if [ ! -e $ZIPPED_TEXT_DATA ]; then
 	    wget http://mattmahoney.net/dc/text8.zip -O $ZIPPED_TEXT_DATA
-	fi
+	  fi
     unzip $ZIPPED_TEXT_DATA
-	mv text8 $TEXT_DATA
+	  mv text8 $TEXT_DATA
   fi
   echo -----------------------------------------------------------------------------------------------------
   echo -- Training vectors...
-  time $BIN_DIR/word2vec -train $TEXT_DATA -output $VECTOR_DATA -cbow 0 -size 200 -window 5 -negative 0 -hs 1 -sample 1e-3 -threads 12 -binary 1
+
+  time $BIN_DIR/word2vec -train $TEXT_DATA -output $VECTOR_DATA \
+    -cbow 0 -size 200 -window 5 -negative 0 \
+    -hs 1 -sample 1e-3 -threads 12 -binary 1
   
 fi
 
