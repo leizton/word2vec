@@ -1,3 +1,4 @@
 bin/*
 data/text8
-data/text8-vector.bin
+data/text8_emb
+data/vocab.txt

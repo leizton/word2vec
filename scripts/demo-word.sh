@@ -6,7 +6,7 @@ SRC_DIR=../src
 
 TEXT_DATA=$DATA_DIR/text8
 ZIPPED_TEXT_DATA="${TEXT_DATA}.zip"
-VECTOR_DATA=$DATA_DIR/text8-vector.bin
+VECTOR_DATA=$DATA_DIR/text8_emb
 
 pushd ${SRC_DIR} && make; popd
 
@@ -24,11 +24,12 @@ if [ ! -e $VECTOR_DATA ]; then
 
   time $BIN_DIR/word2vec -train $TEXT_DATA -output $VECTOR_DATA \
     -cbow 0 -size 200 -window 5 -negative 0 \
-    -hs 1 -sample 1e-3 -threads 12 -binary 1
+    -hs 1 -sample 1e-3 -threads 12 -binary 0 \
+    -save-vocab $DATA_DIR/vocab.txt
   
 fi
 
 echo -----------------------------------------------------------------------------------------------------
 echo -- distance...
 
-$BIN_DIR/distance $DATA_DIR/$VECTOR_DATA
+$BIN_DIR/distance $DATA_DIR/$VECTOR_DATA 0

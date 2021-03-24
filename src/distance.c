@@ -32,11 +32,12 @@ int main(int argc, char **argv) {
   char ch;
   float *M;
   char *vocab;
-  if (argc < 2) {
-    printf("Usage: ./distance <FILE>\nwhere FILE contains word projections in the BINARY FORMAT\n");
-    return 0;
-  }
+
+  // args
   strcpy(file_name, argv[1]);
+  int binary = 1;
+  if (argc > 2) binary = atoi(argv[2]);
+
   f = fopen(file_name, "rb");
   if (f == NULL) {
     printf("Input file not found\n");
@@ -52,7 +53,15 @@ int main(int argc, char **argv) {
   }
   for (b = 0; b < words; b++) {
     fscanf(f, "%s%c", &vocab[b * max_w], &ch);
-    for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
+    if (binary) {
+      for (a = 0; a < size; a++) fread(&M[a + b * size], sizeof(float), 1, f);
+    } else {
+      char s[1000];
+      for (a = 0; a < size; a++) {
+        fscanf(f, "%s%c", s, &ch);
+        M[a + b * size] = atof(s);
+      }
+    }
     len = 0;
     for (a = 0; a < size; a++) len += M[a + b * size] * M[a + b * size];
     len = sqrt(len);
