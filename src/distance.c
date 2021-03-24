@@ -98,6 +98,7 @@ int main(int argc, char **argv) {
       }
     }
     cn++;
+    // 输入单词的下标存到 bi[a]
     for (a = 0; a < cn; a++) {
       for (b = 0; b < words; b++) if (!strcmp(&vocab[b * max_w], st[a])) break;
       if (b == words) b = -1;
@@ -109,7 +110,9 @@ int main(int argc, char **argv) {
       }
     }
     if (b == -1) continue;
+
     printf("\n                                              Word       Cosine distance\n------------------------------------------------------------------------\n");
+    // vec = norm(sum(输入单词的emb_vec))
     for (a = 0; a < size; a++) vec[a] = 0;
     for (b = 0; b < cn; b++) {
       if (bi[b] == -1) continue;
@@ -119,14 +122,17 @@ int main(int argc, char **argv) {
     for (a = 0; a < size; a++) len += vec[a] * vec[a];
     len = sqrt(len);
     for (a = 0; a < size; a++) vec[a] /= len;
+    //
     for (a = 0; a < N; a++) bestd[a] = 0;
     for (a = 0; a < N; a++) bestw[a][0] = 0;
     for (c = 0; c < words; c++) {
       a = 0;
       for (b = 0; b < cn; b++) if (bi[b] == c) a = 1;
       if (a == 1) continue;
+      //
       dist = 0;
       for (a = 0; a < size; a++) dist += vec[a] * M[a + c * size];
+      // dist最大的N个
       for (a = 0; a < N; a++) {
         if (dist > bestd[a]) {
           for (d = N - 1; d > a; d--) {

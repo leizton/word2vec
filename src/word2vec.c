@@ -329,8 +329,9 @@ void InitNet() {
   if (hs) {
     a = posix_memalign((void **)&syn1, 128, (long long)vocab_size * layer1_size * sizeof(float));
     if (syn1 == NULL) {printf("Memory allocation failed\n"); exit(1);}
-    for (b = 0; b < layer1_size; b++) for (a = 0; a < vocab_size; a++)
-     syn1[a * layer1_size + b] = 0;
+    for (b = 0; b < layer1_size; b++)
+      for (a = 0; a < vocab_size; a++)
+        syn1[a * layer1_size + b] = 0;
   }
   if (negative>0) {
     a = posix_memalign((void **)&syn1neg, 128, (long long)vocab_size * layer1_size * sizeof(float));
