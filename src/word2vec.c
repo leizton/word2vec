@@ -325,22 +325,24 @@ void SaveVocab() {
 void InitNet() {
   long long a, b;
   a = posix_memalign((void **)&syn0, 128, (long long)vocab_size * layer1_size * sizeof(float));
-  if (syn0 == NULL) {printf("Memory allocation failed\n"); exit(1);}
+
+  // Hierarchical softmax or Negative Sampling
   if (hs) {
     a = posix_memalign((void **)&syn1, 128, (long long)vocab_size * layer1_size * sizeof(float));
-    if (syn1 == NULL) {printf("Memory allocation failed\n"); exit(1);}
     for (b = 0; b < layer1_size; b++)
       for (a = 0; a < vocab_size; a++)
         syn1[a * layer1_size + b] = 0;
   }
   if (negative>0) {
     a = posix_memalign((void **)&syn1neg, 128, (long long)vocab_size * layer1_size * sizeof(float));
-    if (syn1neg == NULL) {printf("Memory allocation failed\n"); exit(1);}
-    for (b = 0; b < layer1_size; b++) for (a = 0; a < vocab_size; a++)
-     syn1neg[a * layer1_size + b] = 0;
+    for (b = 0; b < layer1_size; b++)
+      for (a = 0; a < vocab_size; a++)
+        syn1neg[a * layer1_size + b] = 0;
   }
-  for (b = 0; b < layer1_size; b++) for (a = 0; a < vocab_size; a++)
-   syn0[a * layer1_size + b] = (rand() / (float)RAND_MAX - 0.5) / layer1_size;
+
+  for (b = 0; b < layer1_size; b++)
+    for (a = 0; a < vocab_size; a++)
+      syn0[a * layer1_size + b] = (rand() / (float)RAND_MAX - 0.5) / layer1_size;
   CreateBinaryTree();
 }
 
@@ -622,6 +624,7 @@ int ArgPos(char *str, int argc, char **argv) {
   return -1;
 }
 
+// argv: https://www.rdocumentation.org/packages/word2vec/versions/0.3.3/topics/word2vec
 int main(int argc, char **argv) {
   int i;
   if (argc == 1) {
